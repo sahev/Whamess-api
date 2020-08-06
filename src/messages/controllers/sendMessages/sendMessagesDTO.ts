@@ -2,10 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class SendMessagesDTO {
     @IsNotEmpty()
-    
-
-    @IsNotEmpty()
-    phoneNumbers: string[];
+    columnSheet: any[];
 
     @IsNotEmpty()
     message: string;

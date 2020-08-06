@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import webdriver from "selenium-webdriver";
-// import chrome from "selenium-webdriver/chrome";
-// import chromedriver from "chromedriver";
 
 @Injectable()
 export class SendMessagesService {
@@ -11,16 +9,9 @@ export class SendMessagesService {
     browserOptions = {
         'debuggerAddress': '127.0.0.1:9222'
     };
-    browserCapabilities = webdriver.Capabilities.chrome()
-    builder: webdriver.Builder;
+    browserCapabilities: any;
+    builder: any;
     driver: any;
-
-
-    constructor() {
-        this.builder = new webdriver.Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
-        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
-        this.browserCapabilities = this.browserCapabilities.set(this.capabilityName, this.browserOptions);
-    }
 
     jsnum(phoneNumber: string): string {
         return "const openChat = phone => { " +
@@ -50,6 +41,10 @@ export class SendMessagesService {
     }
 
     execute(phoneNumber: string, message: string): void {
+        this.builder = new webdriver.Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
+        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
+        this.browserCapabilities = webdriver.Capabilities.chrome().set(this.capabilityName, this.browserOptions);
+
         this.driver.executeScript(this.jsnum(phoneNumber)).then(() => {
             this.driver.executeScript(this.jstext(message)).then(() => {
                 this.driver.quit();

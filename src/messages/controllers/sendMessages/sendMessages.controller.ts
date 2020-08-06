@@ -8,6 +8,21 @@ export class SendMessagesController {
 
   @Post('messages/send')
   sendMessages(@Body(ValidationPipe) sendMessagesDto: SendMessagesDTO): string {
-    return sendMessagesDto.message;
+    let columns: string[] = [];
+    sendMessagesDto.columnSheet[Object.keys(sendMessagesDto.columnSheet)[0]].map((itemColumnSheed, idx) => {
+      if (idx === 0) {
+        columns = itemColumnSheed;
+        return
+      }
+
+      let formatedMessage = sendMessagesDto.message;
+      columns.map((itemColumns, idx) => {
+        if (sendMessagesDto.message.includes(`{${itemColumns}}`)) {
+          formatedMessage = formatedMessage.replace(`{${itemColumns}}`, itemColumnSheed[idx])
+        }
+      })
+      this.sendMessagesService.execute(itemColumnSheed[0], formatedMessage)
+    })
+    return "ok";
   }
 }
