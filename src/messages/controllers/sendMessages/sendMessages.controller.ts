@@ -9,7 +9,8 @@ export class SendMessagesController {
   @Post('messages/send')
   sendMessages(@Body(ValidationPipe) sendMessagesDto: SendMessagesDTO): string {
     let columns: string[] = [];
-    sendMessagesDto.columnSheet[Object.keys(sendMessagesDto.columnSheet)[0]].map((itemColumnSheed, idx) => {
+    const responseArray = [];
+    sendMessagesDto.columnSheet[Object.keys(sendMessagesDto.columnSheet)[0]].map(async (itemColumnSheed, idx) => {
       if (idx === 0) {
         columns = itemColumnSheed;
         return
@@ -21,8 +22,15 @@ export class SendMessagesController {
           formatedMessage = formatedMessage.replace(`{${itemColumns}}`, itemColumnSheed[idx])
         }
       })
-      this.sendMessagesService.execute(itemColumnSheed[0], formatedMessage)
+      await this.sendMessagesService.execute(itemColumnSheed[0], formatedMessage).then(response => {
+        responseArray.push({ phone: itemColumnSheed[0], status: response })
+      }).catch(error => {
+        responseArray.push({ phone: itemColumnSheed[0], status: error })
+      })
     })
+
+    console.log(responseArray);
+
     return "ok";
   }
 }
