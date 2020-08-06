@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import webdriver from "selenium-webdriver";
+import { Builder, Capabilities } from "selenium-webdriver";
 
 @Injectable()
 export class SendMessagesService {
@@ -9,14 +9,11 @@ export class SendMessagesService {
     browserOptions = {
         'debuggerAddress': '127.0.0.1:9222'
     };
-    browserCapabilities: any;
-    builder: any;
-    driver: any;
 
     jsnum(phoneNumber: string): string {
         return "const openChat = phone => { " +
             "const link = document.createElement('a'); " +
-            "link.setAttribute('href', 'whatsapp://send?phone=" + phoneNumber + "');" +
+            "link.setAttribute('href', 'whatsapp://send?phone=55" + phoneNumber + "');" +
             "document.body.append(link);link.click();" +
             "document.body.removeChild(link);" +
             "};" +
@@ -41,14 +38,23 @@ export class SendMessagesService {
     }
 
     execute(phoneNumber: string, message: string): void {
-        this.builder = new webdriver.Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
-        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
-        this.browserCapabilities = webdriver.Capabilities.chrome().set(this.capabilityName, this.browserOptions);
 
-        this.driver.executeScript(this.jsnum(phoneNumber)).then(() => {
-            this.driver.executeScript(this.jstext(message)).then(() => {
-                this.driver.quit();
-            });
+        let builder = new Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
+        let browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
+        let driver = builder.withCapabilities(browserCapabilities).build();
+
+        const formattedMessage = this.formatMessage(message);
+
+        console.log(formattedMessage);
+
+        driver.executeScript(this.jsnum(phoneNumber)).then(async () => {
+            await driver.executeScript(this.jstext(formattedMessage))
+            driver.quit();
         });
     }
+
+    formatMessage(message: string){
+        return message.replace(/\n/g, "</br>");
+    }
+
 }
