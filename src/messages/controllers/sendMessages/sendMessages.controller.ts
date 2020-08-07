@@ -7,30 +7,22 @@ export class SendMessagesController {
   constructor(private sendMessagesService: SendMessagesService) { }
 
   @Post('messages/send')
-  sendMessages(@Body(ValidationPipe) sendMessagesDto: SendMessagesDTO): string {
-    let columns: string[] = [];
-    const responseArray = [];
-    sendMessagesDto.columnSheet[Object.keys(sendMessagesDto.columnSheet)[0]].map(async (itemColumnSheed, idx) => {
-      if (idx === 0) {
-        columns = itemColumnSheed;
-        return
-      }
+  async sendMessages(@Body(ValidationPipe) sendMessagesDto: SendMessagesDTO): Promise<any> {
+    const columns = sendMessagesDto.columnSheet.shift();
+
+    for (let index = 0; index < sendMessagesDto.columnSheet.length; index++) {
 
       let formatedMessage = sendMessagesDto.message;
       columns.map((itemColumns, idx) => {
         if (sendMessagesDto.message.includes(`{${itemColumns}}`)) {
-          formatedMessage = formatedMessage.replace(`{${itemColumns}}`, itemColumnSheed[idx])
+          formatedMessage = formatedMessage.replace(`{${itemColumns}}`, sendMessagesDto.columnSheet[index][idx])
         }
       })
-      await this.sendMessagesService.execute(itemColumnSheed[0], formatedMessage).then(response => {
-        responseArray.push({ phone: itemColumnSheed[0], status: response })
-      }).catch(error => {
-        responseArray.push({ phone: itemColumnSheed[0], status: error })
-      })
-    })
 
-    console.log(responseArray);
+      await this.sendMessagesService.execute(sendMessagesDto.columnSheet[index][0], formatedMessage)
+    }
 
+    this.sendMessagesService.removeSession();
     return "ok";
   }
 }
