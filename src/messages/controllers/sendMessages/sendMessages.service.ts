@@ -12,7 +12,7 @@ export class SendMessagesService {
 
     async execute(phoneNumber: string, message: string): Promise<any> {
 
-        const builder = new Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
+        const builder = new Builder().forBrowser(this.browserName).usingServer('http://whamess.tk/wd/hub');
         const browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
         const driver = builder.withCapabilities(browserCapabilities).build();
         const formattedMessage = this.formatMessage(message);
