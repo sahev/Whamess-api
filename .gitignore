@@ -1,7 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/src/login/controllers/qr/qrimages
+/src/login/controllers/qr/qrimages/
 # Logs
 logs
 *.log
