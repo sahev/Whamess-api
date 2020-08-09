@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SendMessagesController } from './controllers/sendMessages/sendMessages.controller';
-import { SendMessagesService } from './controllers/sendMessages/sendMessages.service';
+import { SendMessagesController } from './sendMessages/controllers/sendMessages.controller';
+import { SendMessagesService } from './sendMessages/services/sendMessages.service';
 
 @Module({
     controllers: [SendMessagesController],
