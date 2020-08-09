@@ -1,6 +1,6 @@
 import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
-import { SendMessagesDTO } from './sendMessagesDTO';
-import { SendMessagesService } from './sendMessages.service';
+import { SendMessagesDTO } from '../DTOs/sendMessagesDTO';
+import { SendMessagesService } from '../services/sendMessages.service';
 
 @Controller()
 export class SendMessagesController {
