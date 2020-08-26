@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../passport/guards/jwt-auth.guard';
 export class LoginController {
     constructor(private authService: AuthService) { }
 
-    @UseGuards(LocalAuthGuard)
+    //@UseGuards(LocalAuthGuard)
     @Post('auth/login')
     async login(@Request() req) {
         return this.authService.login(req.user);

@@ -15,7 +15,7 @@ export class Users {
   password: string;
 
   @Column()
-  createdOn: Date;
+  createdOn: Date = new Date();
 
   @Column({ default: true })
   isActive: boolean;
