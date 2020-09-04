@@ -4,6 +4,8 @@ import { JwtAuthGuard } from "src/auth/passport/guards/jwt-auth.guard";
 import { UsersService } from "../services/users.service";
 import { createSecureServer } from "http2";
 import { UsersDTO } from "../DTOs/users.dto";
+import { getRepository } from "typeorm";
+import { Users } from "../entities/users.entity";
 
 @Controller()
 export default class UserController {
@@ -25,4 +27,10 @@ export default class UserController {
     createUser(@Body() data: UsersDTO){
         return this.userServices.create(data);
     }
+
+    @Get('users/getbyemail/:email')
+    async getByEmail(@Param() param) {
+        return await this.userServices.getByEmail(param.email);
+    }
+
 }
