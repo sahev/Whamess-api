@@ -14,7 +14,7 @@ import { Users } from './users/entities/users.entity';
     QrCodeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
+      host: '168.197.24.119',
       port: 3306,
       username: 'admin',
       password: 'admin',
