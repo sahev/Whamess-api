@@ -14,13 +14,14 @@ export class QRCodeService {
     imagebase64: any;
 
     constructor() {
-        this.builder = new Builder().forBrowser(this.browserName).usingServer('http://localhost:4444/wd/hub');
+        this.builder = new Builder().forBrowser(this.browserName).usingServer('http://whamess.tk:4444/wd/hub');
         this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
         this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
     }
 
     async getqrcode(): Promise<string> {
         let string = await this.driver.findElement(By.className('_1QMFu')).takeScreenshot();
+        this.removeSession();
         return string;
     }
 
