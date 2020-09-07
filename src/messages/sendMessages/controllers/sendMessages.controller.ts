@@ -1,11 +1,13 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseGuards } from '@nestjs/common';
 import { SendMessagesDTO } from '../DTOs/sendMessagesDTO';
 import { SendMessagesService } from '../services/sendMessages.service';
+import { JwtAuthGuard } from 'src/auth/passport/guards/jwt-auth.guard';
 
 @Controller()
 export class SendMessagesController {
   constructor(private sendMessagesService: SendMessagesService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post('messages/send')
   async sendMessages(@Body(ValidationPipe) sendMessagesDto: SendMessagesDTO): Promise<any> {
     const columns = sendMessagesDto.columnSheet.shift();
