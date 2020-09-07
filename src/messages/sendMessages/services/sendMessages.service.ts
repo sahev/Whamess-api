@@ -22,7 +22,6 @@ export class SendMessagesService {
     async execute(phoneNumber: string, message: string): Promise<any> {
 
         const formattedMessage = this.formatMessage(message);
-
         await this.driver.executeScript(this.jsnum(phoneNumber))
         await this.driver.executeScript(this.jstext(formattedMessage))
     }
@@ -80,6 +79,12 @@ export class SendMessagesService {
             "}; " +
             "openChat();" +
             "myFunc();";
+    }
+
+    checkLogged() {
+        return "if (document.getElementsByClassName('landing-headerTitle').length !== 0) {"+
+            "alert('Necessário iniciar sua sessão no WhatsApp com o QRCode!')"+
+        "}"
     }
 
     formatMessage(message: string): string {
