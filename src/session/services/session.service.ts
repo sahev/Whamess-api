@@ -22,8 +22,10 @@ export class SessionService {
     async getSession(): Promise<boolean> {
         try {
             await (await this.driver.findElement(By.className('landing-headerTitle'))).getText();
+            this.removeSession();
             return false
         } catch {
+            this.removeSession();
             return true
         }
     }
