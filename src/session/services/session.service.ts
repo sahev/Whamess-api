@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { Builder, Capabilities, WebDriver, By } from "selenium-webdriver";
 
 @Injectable({ scope: Scope.REQUEST })
-export class QRCodeService {
+export class SessionService {
     browserName = 'chrome';
     capabilityName = 'goog:chromeOptions';
     browserOptions = {
@@ -19,18 +19,13 @@ export class QRCodeService {
         this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
     }
 
-    async getqrcode(): Promise<string> {
-        var self=this;
-        await this.driver.findElement(By.className('_3IKPF')).then(function(webElement) {
-            self.driver.navigate().refresh();
-        }, function(err) {
-            if (err.state && err.state === 'no such element') {
-            } 
-        });
-        let string = await this.driver.findElement(By.className('_1QMFu')).takeScreenshot();
-
-        return string;
-    
+    async getSession(): Promise<boolean> {
+        try {
+            await (await this.driver.findElement(By.className('landing-headerTitle'))).getText();
+            return false
+        } catch {
+            return true
+        }
     }
 
     removeSession(): void {

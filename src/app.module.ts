@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MessagesModule } from './messages/messages.module';
 import { QrCodeModule } from './qrCode/qrCode.module';
+import { SessionModule } from './session/session.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,7 @@ import { Users } from './users/entities/users.entity';
     AuthModule,
     UsersModule,
     QrCodeModule,
+    SessionModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '168.197.24.119',
