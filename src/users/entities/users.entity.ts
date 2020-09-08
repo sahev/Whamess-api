@@ -19,4 +19,7 @@ export class Users {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: 0 })
+  messagesCount: number;
 }

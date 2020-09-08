@@ -2,6 +2,7 @@ import { Controller, Post, Body, ValidationPipe, UseGuards } from '@nestjs/commo
 import { SendMessagesDTO } from '../DTOs/sendMessagesDTO';
 import { SendMessagesService } from '../services/sendMessages.service';
 import { JwtAuthGuard } from 'src/auth/passport/guards/jwt-auth.guard';
+import { UsersService } from 'src/users/services/users.service'
 
 @Controller()
 export class SendMessagesController {
@@ -25,6 +26,7 @@ export class SendMessagesController {
     }
 
     this.sendMessagesService.removeSession();
-    return "ok";
+
+    return sendMessagesDto.columnSheet.length ;
   }
 }
