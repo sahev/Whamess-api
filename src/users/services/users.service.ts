@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/users.entity';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { UsersDTO } from '../DTOs/users.dto';
 
 @Injectable()
@@ -32,5 +32,26 @@ export class UsersService {
     const user = await this.usersRepository.create(data);
     await this.usersRepository.save(user);
     return user;
+  }
+
+  async messagescount(id: number, rows: string) {
+
+    const property = await this.usersRepository.findOne({
+      where: { id }
+    });
+
+    const count = parseInt(property.messagesCount.toString()) + parseInt(rows)
+    
+    await getConnection()
+    .createQueryBuilder()
+    .update(Users)
+    .set({ messagesCount: count })
+    .where("id = :id", { id })
+    .execute();
+
+    return await this.usersRepository.findOne({
+      where: { id }
+    });
+
   }
 }

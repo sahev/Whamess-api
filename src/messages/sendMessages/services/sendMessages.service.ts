@@ -81,12 +81,6 @@ export class SendMessagesService {
             "myFunc();";
     }
 
-    checkLogged() {
-        return "if (document.getElementsByClassName('landing-headerTitle').length !== 0) {"+
-            "alert('Necessário iniciar sua sessão no WhatsApp com o QRCode!')"+
-        "}"
-    }
-
     formatMessage(message: string): string {
         return message.replace(/\n/g, "</br>");
     }

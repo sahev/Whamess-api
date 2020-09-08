@@ -15,7 +15,7 @@ export class LoginController {
         return this.authService.login(req.body);
     }
 
-    @UseGuards(JwtAuthGuard)
+    //@UseGuards(JwtAuthGuard)
     @Get('profile')
     async getProfile(@Request() req) {
         return req.user;
