@@ -21,16 +21,19 @@ export class QRCodeService {
 
     async getqrcode(): Promise<string> {
         var self=this;
-        await this.driver.findElement(By.className('_3IKPF')).then(function(webElement) {
-            self.driver.navigate().refresh();
-        }, function(err) {
-            if (err.state && err.state === 'no such element') {
-            } 
-        });
-        let string = await this.driver.findElement(By.className('_1QMFu')).takeScreenshot();
-
-        return string;
-    
+        try{
+            await this.driver.findElement(By.className('_3IKPF')).then(function(webElement) {
+                self.driver.navigate().refresh();
+            }, function(err) {
+                if (err.state && err.state === 'no such element') {
+                } 
+            });
+            let string = await this.driver.findElement(By.className('_1QMFu')).takeScreenshot();
+            this.removeSession();
+            return string;
+        } catch {
+            return 'Logado'
+        }
     }
 
     removeSession(): void {
