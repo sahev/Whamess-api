@@ -21,11 +21,19 @@ export class SessionService {
 
     async getSession(): Promise<boolean> {
         try {
-            await (await this.driver.findElement(By.className('landing-headerTitle'))).getText();
-            this.removeSession();
+           if (await (await this.driver.findElement(By.className('landing-headerTitle'))).getText()) {
+               return false
+           }
             return false
         } catch {
-            this.removeSession();
+            try {
+                if (await (await this.driver.findElement(By.className('S7_rT _1hQZ_'))).isDisplayed()) {
+                    await this.driver.findElement(By.className('S7_rT _1hQZ_')).click();
+                    return false
+                   }
+            } catch {
+                return true
+            }
             return true
         }
     }
