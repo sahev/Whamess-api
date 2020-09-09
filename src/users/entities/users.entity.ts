@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Users {
+  
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,14 +16,21 @@ export class Users {
   email: string;
 
   @Column()
-  password: string;
+  phone: string;
 
   @Column()
-  createdOn: Date = new Date();
+  password: string;
 
   @Column({ default: true })
   isActive: boolean;
 
   @Column({ default: 0 })
   messagesCount: number;
+
+  @Column()
+  createdOn: Date = new Date();
+
+  
+  @Column()
+  expiresOn: Date = new Date((new Date()).setDate((new Date()).getDate() + 7));
 }
