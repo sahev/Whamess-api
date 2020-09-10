@@ -30,6 +30,8 @@ export class SessionService {
                 if (await (await this.driver.findElement(By.className('S7_rT _1hQZ_'))).isDisplayed()) {
                     await this.driver.findElement(By.className('S7_rT _1hQZ_')).click();
                     return false
+                   } else {
+                    return false
                    }
             } catch {
                 return true
