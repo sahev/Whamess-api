@@ -4,3 +4,11 @@ export interface UsersDTO {
     password: string,
     isActive: boolean
 }
+
+export interface UpdateUsersDTO {
+    id: string,
+    name: string,
+    lastname: string, 
+    email: string,
+    phone: string    
+}
