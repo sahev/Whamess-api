@@ -2,7 +2,7 @@ import { Injectable, HttpStatus, BadRequestException, NotFoundException } from '
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/users.entity';
 import { Repository, getConnection } from 'typeorm';
-import { UsersDTO } from '../DTOs/users.dto';
+import { UsersDTO, UpdateUsersDTO } from '../DTOs/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +24,23 @@ export class UsersService {
     return await this.usersRepository.findOne({ email });
   }
 
+  async updateUser(data: UpdateUsersDTO, param: number) {
+    await getConnection()
+      .createQueryBuilder()
+      .update(Users)
+      .set({
+        name: data.name,
+        lastname: data.lastname,
+        email: data.email,
+        phone: data.phone
+      })
+      .where("email = :email", { email: param })
+      .execute();
+    return await this.usersRepository.findOne({
+      where: { email: param }
+    });
+  }
+
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
   }
@@ -32,9 +49,9 @@ export class UsersService {
     const user = await this.usersRepository.create(data);
     try {
       let checkexists = await this.usersRepository.findOne({ email: data.email });
-      if(checkexists.email === data.email) {
+      if (checkexists.email === data.email) {
         return new BadRequestException('Cadastro existente');
-      } 
+      }
     } catch {
       await this.usersRepository.save(user);
       return user;
@@ -42,7 +59,6 @@ export class UsersService {
   }
 
   async messagescount(id: number, rows: string) {
-
     const property = await this.usersRepository.findOne({
       where: { id }
     });
@@ -55,10 +71,8 @@ export class UsersService {
       .set({ messagesCount: count })
       .where("id = :id", { id })
       .execute();
-
     return await this.usersRepository.findOne({
       where: { id }
     });
-
   }
 }
