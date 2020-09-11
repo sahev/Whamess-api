@@ -1,14 +1,17 @@
 import { Injectable, HttpStatus, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../entities/users.entity';
+import { Users, MessagesInfo } from '../entities/users.entity';
 import { Repository, getConnection } from 'typeorm';
-import { UsersDTO, UpdateUsersDTO } from '../DTOs/users.dto';
+import { UsersDTO, UpdateUsersDTO, MessagesInfoDTO } from '../DTOs/users.dto';
 
 @Injectable()
 export class UsersService {
   private readonly users: Users[];
+  private readonly messagesinfo: MessagesInfo[];
 
-  constructor(@InjectRepository(Users) private usersRepository: Repository<Users>) {
+  constructor(
+    @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @InjectRepository(MessagesInfo) private messagesinfoRepository: Repository<MessagesInfo>) {
 
   }
 
@@ -24,20 +27,12 @@ export class UsersService {
     return await this.usersRepository.findOne({ email });
   }
 
-  async updateUser(data: UpdateUsersDTO, param: number) {
-    await getConnection()
-      .createQueryBuilder()
-      .update(Users)
-      .set({
-        name: data.name,
-        lastname: data.lastname,
-        email: data.email,
-        phone: data.phone
-      })
-      .where("email = :email", { email: param })
-      .execute();
+  async updateUser(data: UsersDTO, param: number) {
+
+    await this.usersRepository.update({ id: param }, data)
+
     return await this.usersRepository.findOne({
-      where: { email: param }
+      where: { email: data.email }
     });
   }
 
@@ -74,5 +69,48 @@ export class UsersService {
     return await this.usersRepository.findOne({
       where: { id }
     });
+  }
+
+  async messagesInfo(data: MessagesInfoDTO) {
+    let date = new Date().toISOString().slice(0,10)
+    
+    const user = await this.messagesinfoRepository.create(data);
+    const property = await this.messagesinfoRepository.findOne({
+      where: { usr_id: data.usr_id, mes_date: date }
+    })
+
+    if (property === undefined) {
+      await this.messagesinfoRepository.save(user);
+    } else {
+      const count = property.mes_messagesperday + data.mes_messagesperday
+
+      await getConnection()
+        .createQueryBuilder()
+        .update(MessagesInfo)
+        .set({ 
+          usr_id: data.usr_id,
+          mes_messagesperday: count,
+
+        })
+        .where("usr_id = :usr_id and mes_date = :mes_date", { usr_id: data.usr_id, mes_date: date })
+        .execute();
+    }
+
+    return await this.messagesinfoRepository.findOne({
+      where: { usr_id: data.usr_id, mes_date: date  }
+    });
+  }
+  
+  async messagesPerDay(id: string) {
+
+    
+    return getConnection().createQueryBuilder(MessagesInfo, 'messages_info')
+    .orderBy('mes_date', 'DESC')
+    .where("usr_id = :usr_id", { usr_id: id })
+    .getMany();
+    // return await this.messagesinfoRepository.find({
+    //   where: { usr_id: id }
+    // })
+
   }
 }

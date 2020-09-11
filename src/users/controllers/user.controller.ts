@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, UseGuards, Get, Delete, Param, Post, Body, Patch } from "@nestjs/common";
+import { Controller, UseGuards, Get, Delete, Param, Post, Body, Patch, ValidationPipe, Query } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/passport/guards/jwt-auth.guard";
 import { UsersService } from "../services/users.service";
-import { createSecureServer } from "http2";
-import { UsersDTO, UpdateUsersDTO } from "../DTOs/users.dto";
+import { UsersDTO, UpdateUsersDTO, MessagesInfoDTO } from "../DTOs/users.dto";
 import { getRepository } from "typeorm";
 import { Users } from "../entities/users.entity";
 
@@ -35,10 +34,10 @@ export default class UserController {
     return await this.userServices.getByEmail(param.email);
     }
 
-    //@UseGuards(JwtAuthGuard)
-    @Patch('users/:email')
-    async updateUser(@Body() data: UpdateUsersDTO, @Param() param) {
-    return await this.userServices.updateUser(data, param.email);
+    @UseGuards(JwtAuthGuard)
+    @Patch('users/')
+    async updateUser(@Body(ValidationPipe) data: UsersDTO, @Query() param) {
+    return await this.userServices.updateUser(data, param.id);
     }    
 
     @UseGuards(JwtAuthGuard)
@@ -46,4 +45,16 @@ export default class UserController {
     async messagescount(@Param() param) {
         return await this.userServices.messagescount(param.id, param.rows);
     }
+
+    //@UseGuards(JwtAuthGuard)
+    @Post('users/messagesinfo/')
+    async messagesinfo(@Body() data: MessagesInfoDTO) {
+        return await this.userServices.messagesInfo(data);
+    }
+
+    //@UseGuards(JwtAuthGuard)
+    @Get('users/messagesperday/')
+    async messagesPerDay(@Query() param) {
+    return await this.userServices.messagesPerDay(param.id);
+    }    
 }
