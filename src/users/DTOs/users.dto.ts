@@ -1,7 +1,10 @@
-export interface UsersDTO {
-    name: string,
-    email: string,
-    password: string,
+import { IsNotEmpty, IsEmail, IsString, IsPhoneNumber, IsInt, Min, Max } from "class-validator"
+
+export class UsersDTO {
+    name: string
+
+    email: string
+    password: string
     isActive: boolean
 }
 
@@ -11,4 +14,9 @@ export interface UpdateUsersDTO {
     lastname: string, 
     email: string,
     phone: string    
+}
+
+export interface MessagesInfoDTO {
+    usr_id: string,
+    mes_messagesperday: number
 }
