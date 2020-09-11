@@ -17,6 +17,6 @@ export interface UpdateUsersDTO {
 }
 
 export interface MessagesInfoDTO {
-    usr_id: string,
+    usr_id: number,
     mes_messagesperday: number
 }

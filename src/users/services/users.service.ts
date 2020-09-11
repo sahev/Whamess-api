@@ -106,11 +106,31 @@ export class UsersService {
     
     return getConnection().createQueryBuilder(MessagesInfo, 'messages_info')
     .orderBy('mes_date', 'DESC')
-    .where("usr_id = :usr_id", { usr_id: id })
+    .where("usr_id = :usr_id and DAY(mes_date) = DAY(NOW()) AND month(mes_date) = MONTH(NOW())", { usr_id: id })
     .getMany();
     // return await this.messagesinfoRepository.find({
     //   where: { usr_id: id }
     // })
 
   }
+
+  async messagesPerWeek(id: string) {
+    return await getConnection().createQueryBuilder(MessagesInfo, 'messages_info')
+    .orderBy('mes_date', 'DESC')
+    .where("usr_id = :usr_id and mes_date > DATE_ADD(CURRENT_DATE(), INTERVAL -7 DAY)", { usr_id: id })
+    .getMany(); 
+  }  
+
+  async messagesPerMonth(id: string) {
+
+    
+    return getConnection().createQueryBuilder(MessagesInfo, 'messages_info')
+    .orderBy('mes_date', 'DESC')
+    .where("usr_id = :usr_id and month(mes_date) = MONTH(NOW())", { usr_id: id })
+    .getMany();
+    // return await this.messagesinfoRepository.find({
+    //   where: { usr_id: id }
+    // })
+
+  } 
 }
