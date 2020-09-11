@@ -57,4 +57,16 @@ export default class UserController {
     async messagesPerDay(@Query() param) {
     return await this.userServices.messagesPerDay(param.id);
     }    
+
+    //@UseGuards(JwtAuthGuard)
+    @Get('users/messagesperweek/')
+    async messagesPerWeek(@Query() param) {
+    return await this.userServices.messagesPerWeek(param.id);
+    }    
+    
+    //@UseGuards(JwtAuthGuard)
+    @Get('users/messagespermonth/')
+    async messagesPerMonth(@Query() param) {
+    return await this.userServices.messagesPerMonth(param.id);
+    }        
 }

@@ -41,7 +41,7 @@ export class MessagesInfo {
   mes_id: number;
 
   @Column()
-  usr_id: string;
+  usr_id: number;
 
   @Column({ default: 0 })
   mes_messagesperday: number;
