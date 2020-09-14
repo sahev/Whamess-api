@@ -72,8 +72,7 @@ export class UsersService {
   }
 
   async messagesInfo(data: MessagesInfoDTO) {
-    let date = new Date().toISOString().slice(0,10)
-    
+    let date = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}).slice(0,10);
     const user = await this.messagesinfoRepository.create(data);
     const property = await this.messagesinfoRepository.findOne({
       where: { usr_id: data.usr_id, mes_date: date }
@@ -108,10 +107,6 @@ export class UsersService {
     .orderBy('mes_date', 'DESC')
     .where("usr_id = :usr_id and DAY(mes_date) = DAY(NOW()) AND month(mes_date) = MONTH(NOW())", { usr_id: id })
     .getMany();
-    // return await this.messagesinfoRepository.find({
-    //   where: { usr_id: id }
-    // })
-
   }
 
   async messagesPerWeek(id: string) {
@@ -128,9 +123,5 @@ export class UsersService {
     .orderBy('mes_date', 'DESC')
     .where("usr_id = :usr_id and month(mes_date) = MONTH(NOW())", { usr_id: id })
     .getMany();
-    // return await this.messagesinfoRepository.find({
-    //   where: { usr_id: id }
-    // })
-
   } 
 }

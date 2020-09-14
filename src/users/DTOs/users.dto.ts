@@ -1,8 +1,5 @@
-import { IsNotEmpty, IsEmail, IsString, IsPhoneNumber, IsInt, Min, Max } from "class-validator"
-
 export class UsersDTO {
     name: string
-
     email: string
     password: string
     isActive: boolean
