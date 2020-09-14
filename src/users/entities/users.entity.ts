@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+var date = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
 
 @Entity()
 export class Users {
@@ -46,7 +47,7 @@ export class MessagesInfo {
   @Column({ default: 0 })
   mes_messagesperday: number;
 
-  @Column({default: new Date().toISOString().slice(0,10)})
+  @Column({default: date.slice(0,10)}) //new Date().toISOString().slice(0,10)
   mes_date: Date;
 
 }
