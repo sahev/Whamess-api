@@ -6,21 +6,24 @@ export class SendMessagesService {
 
     browserName = 'chrome';
     capabilityName = 'goog:chromeOptions';
-    browserOptions = {
-        'debuggerAddress': '127.0.0.1:9222'
-    };
     builder: Builder;
     browserCapabilities: Capabilities;
     driver: WebDriver;
 
     constructor() {
-        this.builder = new Builder().forBrowser(this.browserName).usingServer('http://whamess.tk:5555/wd/hub');
-        this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
-        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
+        //this.builder = new Builder().forBrowser(this.browserName).usingServer('http://whamess.tk:5555/wd/hub');
+        // this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
+        // this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
     }
 
-    async execute(phoneNumber: string, message: string): Promise<any> {
-
+    async execute(param, phoneNumber: string, message: string): Promise<any> {
+        let browserOptions = {
+            'debuggerAddress': '127.0.0.1:' + param._v
+        };
+        let url = 'http://whamess.tk:'+ param._n +'/wd/hub'
+        this.builder = new Builder().forBrowser(this.browserName).usingServer(url);
+        this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
+        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
         const formattedMessage = this.formatMessage(message);
         await this.driver.executeScript(this.jsnum(phoneNumber))
         await this.driver.executeScript(this.jstext(formattedMessage))

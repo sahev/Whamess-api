@@ -5,21 +5,24 @@ import { Builder, Capabilities, WebDriver, By } from "selenium-webdriver";
 export class SessionService {
     browserName = 'chrome';
     capabilityName = 'goog:chromeOptions';
-    browserOptions = {
-        'debuggerAddress': '127.0.0.1:9222'
-    };
     builder: Builder;
     browserCapabilities: Capabilities;
     driver: WebDriver;
     imagebase64: any;
 
-    constructor() {
-        this.builder = new Builder().forBrowser(this.browserName).usingServer('http://whamess.tk:4444/wd/hub');
-        this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, this.browserOptions);
-        this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
-    }
+    async getSession(param): Promise<boolean> {
+        if (param._v !== undefined) {
+            let browserOptions = {
+                'debuggerAddress': '127.0.0.1:' + param._v
+            };
+            let url = 'http://whamess.tk:'+ param._n +'/wd/hub'
+            this.builder = new Builder().forBrowser(this.browserName).usingServer(url);
+            this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
+            this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
+        }
 
-    async getSession(): Promise<boolean> {
+
+        
         try {
            if (await (await this.driver.findElement(By.className('landing-headerTitle'))).getText()) {
                return false
