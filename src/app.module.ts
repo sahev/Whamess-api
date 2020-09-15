@@ -5,7 +5,7 @@ import { SessionModule } from './session/session.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users, MessagesInfo } from './users/entities/users.entity';
+import { Users, MessagesInfo, ClientPorts } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { Users, MessagesInfo } from './users/entities/users.entity';
       username: 'admin',
       password: 'admin',
       database: 'testdb',
-      entities: [Users, MessagesInfo],
+      entities: [Users, MessagesInfo, ClientPorts],
       synchronize: true,
       migrationsTableName: "migration_table",
       migrations: ["src/migration2/*.js"],
