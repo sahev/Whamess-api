@@ -18,15 +18,16 @@ export class SendMessagesService {
 
     async execute(param, phoneNumber: string, message: string): Promise<any> {
         let browserOptions = {
-            'debuggerAddress': '127.0.0.1:' + param._v
+            'debuggerAddress': 'localhost:' + param._v
         };
-        let url = 'http://whamess.tk:'+ param._n +'/wd/hub'
+        let url = 'http://192.168.0.103:'+ param._n +'/wd/hub'
         this.builder = new Builder().forBrowser(this.browserName).usingServer(url);
         this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
         this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
         const formattedMessage = this.formatMessage(message);
         await this.driver.executeScript(this.jsnum(phoneNumber))
         await this.driver.executeScript(this.jstext(formattedMessage))
+        this.removeSession()
     }
 
     removeSession(): void {

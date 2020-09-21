@@ -1,0 +1,1 @@
+docker run -d -p 4444:4444 --name node0 --restart=always -v /dev/shm:/dev/shm selenium/standalone-chrome
