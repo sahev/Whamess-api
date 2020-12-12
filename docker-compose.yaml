@@ -7,33 +7,41 @@ services:
     image: selenium/standalone-chrome
     volumes:
       - /dev/shm:/dev/shm  
+    environment:
+      - NODE_MAX_INSTANCES=5
+      - NODE_MAX_SESSION=5  
+      - NODE_BROWSER_TIMEOUT=30000      
     ports:
-      - "4440:4440"      
+      - "4440:4444"      
       
   node2:
     image: selenium/standalone-chrome
     volumes:
-      - /dev/shm:/dev/shm    
+      - /dev/shm:/dev/shm  
+    environment:
+      - NODE_MAX_INSTANCES=5
+      - NODE_MAX_SESSION=5
+      - NODE_BROWSER_TIMEOUT=30000          
     ports:
-      - "4441:4441"
+      - "4441:4444"
       
-  node3:
-    image: selenium/standalone-chrome
-    volumes:
-      - /dev/shm:/dev/shm    
-    ports:
-      - "4442:4442"
+  # node3:
+    # image: selenium/standalone-chrome
+    # volumes:
+      # - /dev/shm:/dev/shm    
+    # ports:
+      # - "4442:4442"
 
-  node4:
-    image: selenium/standalone-chrome
-    volumes:
-      - /dev/shm:/dev/shm    
-    ports:
-      - "4443:4443"
+  # node4:
+    # image: selenium/standalone-chrome
+    # volumes:
+      # - /dev/shm:/dev/shm    
+    # ports:
+      # - "4443:4443"
 
-  node5:
-    image: selenium/standalone-chrome
-    volumes:
-      - /dev/shm:/dev/shm    
-    ports:
-      - "4444:4444"      
+  # node5:
+    # image: selenium/standalone-chrome
+    # volumes:
+      # - /dev/shm:/dev/shm    
+    # ports:
+      # - "4444:4444"      

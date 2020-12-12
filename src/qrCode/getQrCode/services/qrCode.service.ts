@@ -11,34 +11,106 @@ export class QRCodeService {
     imagebase64: any;
 
     async getqrcode(param): Promise<string> {
-        var self=this;
+
         let browserOptions = {
             'debuggerAddress': 'localhost:' + param._v
         };
-        let url = 'http://192.168.0.103:'+ param._n +'/wd/hub'
+        let url = 'http://192.168.99.100:'+ param._n +'/wd/hub'
         //let url = 'http://localhost:4444/wd/hub'
         this.builder = new Builder().forBrowser(this.browserName).usingServer(url);
         this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
         this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
-         
-        try{
-            await this.driver.findElement(By.className('_3IKPF')).then(function(webElement) {
-                self.driver.navigate().refresh();
-                this.removeSession();
-            }, function(err) {
-                if (err.state && err.state === 'no such element') {
-                } 
-            });
-            let string = await this.driver.findElement(By.className('_1QMFu')).takeScreenshot();
-            this.removeSession();
-            return string;
-        } catch {
-            this.removeSession();
-            return 'Logado'
+
+        if (!await this.checkAnotherBrowser() && !await this.checkExpiredCode())
+        {
+            return await this.qrCodestring();
         }
+        
+        if (await this.checkExpiredCode())
+        {
+            return await this.qrCodestring();
+        }
+    
+        if (this.checkAnotherBrowser())
+        {
+            return await this.qrCodestring();
+        } 
+         
     }
 
-    removeSession(): void {
+    async checkQrCodeExists(): Promise<any> {
+        var self = this;
+        let status:boolean;
+        await this.driver.findElement(By.className('_1yHR2'))
+        .then(function(webElement) {
+            status = true
+        }, function(err) {
+            if (err.state && err.state === 'no such element') {
+                self.driver.navigate().refresh();
+                status = false
+            } 
+        });
+        return status
+      }
+    
+      async checkAnotherBrowser(): Promise<any> {
+        var self = this;
+        let status:boolean;
+    
+        await this.driver.findElement(By.className('_30EVj IqPek'))
+        .then(function(webElement) {
+            self.driver.findElement(By.className('_30EVj IqPek')).click();
+            status = true;
+        }, function(err) {
+            if (err.state && err.state === 'no such element') {
+                status = false;
+            } 
+            status = false
+        });
+        return status
+      }
+    
+      async checkExpiredCode(): Promise<any> {
+        var self = this;
+        let status:boolean = false;
+        await this.driver.findElement(By.className('n9gYh'))
+        .then(function(webElement) {
+            self.driver.navigate().refresh();
+            status = true
+        }, function(err) {
+            if (err.state && err.state === 'no such element') {
+                status = false
+            } 
+        });
+        return status
+      }
+    
+    //   async getqrcode(): Promise<string> {
+    //     //||
+    //     if (!await this.checkAnotherBrowser() && !await this.checkExpiredCode())
+    //     {
+    //         return await this.qrCodestring();
+    //     }
+        
+    //     if (await this.checkExpiredCode())
+    //     {
+    //         return await this.qrCodestring();
+    //     }
+    
+    //     if (this.checkAnotherBrowser())
+    //     {
+    //         return await this.qrCodestring();
+    //     } 
+    // }
+    
+      removeSession(): void {
         this.driver.quit();
+      }
+    
+      async qrCodestring(): Promise<string> {
+        let string = await this.driver.findElement(By.className('_1yHR2')).takeScreenshot();
+        this.removeSession();
+        return string;   
+      }
+      
     }
-}

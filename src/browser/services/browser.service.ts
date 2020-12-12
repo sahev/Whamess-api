@@ -17,7 +17,7 @@ export class BrowserService {
         
         const chrome = require('selenium-webdriver/chrome');
 
-            let url = 'http://192.168.0.103:'+ param._n +'/wd/hub'
+            let url = 'http://192.168.99.100:'+ param._n +'/wd/hub'
             this.driver = new Builder().forBrowser(this.browserName).setChromeOptions(new chrome.Options().addArguments('--remote-debugging-port=' + param._v)
             )
             .usingServer(url)
