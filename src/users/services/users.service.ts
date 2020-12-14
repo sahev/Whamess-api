@@ -1,7 +1,7 @@
 import { Injectable, HttpStatus, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users, MessagesInfo, ClientPorts } from '../entities/users.entity';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, createQueryBuilder } from 'typeorm';
 import { UsersDTO, UpdateUsersDTO, MessagesInfoDTO } from '../DTOs/users.dto';
 
 @Injectable()
@@ -25,6 +25,10 @@ export class UsersService {
 
   async getByEmail(email: string) {
     return await this.usersRepository.findOne({ email });
+  }
+
+  async getByToken(token: string) {
+    return await this.usersRepository.findOne({ token });
   }
 
   async updateUser(data: UsersDTO, param: number) {

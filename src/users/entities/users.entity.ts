@@ -33,6 +33,9 @@ export class Users {
 
   @Column()
   expiresOn: Date = new Date((new Date()).setDate((new Date()).getDate() + 7));
+
+  @Column()
+  token: string = Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
 @Entity()

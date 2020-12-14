@@ -28,7 +28,7 @@ export default class UserController {
         return this.userServices.create(data);
     }
 
-    @UseGuards(JwtAuthGuard)
+    //@UseGuards(JwtAuthGuard)
     @Get('users/getbyemail/:email')
     async getByEmail(@Param() param) {
     return await this.userServices.getByEmail(param.email);

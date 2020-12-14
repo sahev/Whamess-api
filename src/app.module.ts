@@ -22,7 +22,7 @@ import { Users, MessagesInfo, ClientPorts } from './users/entities/users.entity'
       port: 3306,
       username: 'admin',
       password: 'admin',
-      database: 'testdb',
+      database: 'testdb1',
       entities: [Users, MessagesInfo, ClientPorts],
       synchronize: true,
       migrationsTableName: "migration_table",
@@ -30,7 +30,8 @@ import { Users, MessagesInfo, ClientPorts } from './users/entities/users.entity'
       cli: {
         "migrationsDir": "migration"
       }
-    }),],
+    }),
+  ],
 })
 
 export class AppModule { }

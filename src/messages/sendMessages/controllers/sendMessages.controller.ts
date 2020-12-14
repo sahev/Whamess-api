@@ -6,15 +6,19 @@ import {
   UseGuards,
   Query,
   Param,
+  Headers,
 } from '@nestjs/common';
 import { SendMessagesDTO, SendMessageDTO } from '../DTOs/sendMessagesDTO';
 import { SendMessagesService } from '../services/sendMessages.service';
 import { JwtAuthGuard } from 'src/auth/passport/guards/jwt-auth.guard';
 import { UsersService } from 'src/users/services/users.service';
 
+
 @Controller()
 export class SendMessagesController {
-  constructor(private sendMessagesService: SendMessagesService) {}
+  constructor(private sendMessagesService: SendMessagesService,
+    private UsersService: UsersService,
+    ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('messages/send')
@@ -47,23 +51,30 @@ export class SendMessagesController {
     return sendMessagesDto.columnSheet.length;
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('message/send')
   async sendMessage(
+    @Headers('token') key,
     @Query() param,
     @Body(ValidationPipe) sendMessageDto: SendMessageDTO,
   ): Promise<any> {
+    
+    if(await this.UsersService.getByToken(key)) {
     try {
-      for (let index = 0; index < sendMessageDto.number.length; index++) {
-        await this.sendMessagesService.execute(
-          param,
-          sendMessageDto.number[index],
-          sendMessageDto.message,
-        );
+        for (let index = 0; index < sendMessageDto.number.length; index++) {
+          await this.sendMessagesService.execute(
+            param,
+            sendMessageDto.number[index],
+            sendMessageDto.message,
+          );
+        }
+        return { status: 200, message: 'message sent successfully' };
+      } catch (e) {
+        return { status: 401, message: 'API disconnected', err: e };
       }
-      return { status: 200, message: 'message sent successfully' };
-    } catch (e) {
-      return { status: 401, message: 'API disconnected', err: e };
+    } else {
+      return { status: 400, message: 'invalid user token' }
     }
   }
 }
+  
