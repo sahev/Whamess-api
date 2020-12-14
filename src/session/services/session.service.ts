@@ -34,6 +34,7 @@ export class SessionService {
 
     async checkSession(): Promise<any> {
         let status:boolean;
+
         await this.driver.findElement(By.className('_3LtPa'))
         .then(function(webElement) {
             status = true;
@@ -43,11 +44,12 @@ export class SessionService {
             } 
             status = false
         });
-        this.driver.quit();
+        
+        this.removeSession().catch(e => { });
         return status
       }
 
-    removeSession(): void {
-        this.driver.quit();
+    async removeSession(): Promise<void> {
+        await this.driver.quit();
     }
 }

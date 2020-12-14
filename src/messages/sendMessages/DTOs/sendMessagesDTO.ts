@@ -7,3 +7,11 @@ export class SendMessagesDTO {
     @IsNotEmpty()
     message: string;
 }
+
+export class SendMessageDTO {
+    @IsNotEmpty()
+    number: any[];
+
+    @IsNotEmpty()
+    message: string;
+}

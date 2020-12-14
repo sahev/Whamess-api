@@ -25,13 +25,17 @@ export class SendMessagesService {
         this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
         this.driver = this.builder.withCapabilities(this.browserCapabilities).build();
         const formattedMessage = this.formatMessage(message);
-        await this.driver.executeScript(this.jsnum(phoneNumber))
-        await this.driver.executeScript(this.jstext(formattedMessage))
-        this.removeSession()
+        try {
+            await this.driver.executeScript(this.jsnum(phoneNumber));
+            await this.driver.executeScript(this.jstext(formattedMessage));
+        } finally {
+            this.removeSession().catch(e => {})
+        }
+        
     }
 
-    removeSession(): void {
-        this.driver.quit();
+    async removeSession(): Promise<void> {
+        await this.driver.quit();
     }
 
     jsnum(phoneNumber: string): string {

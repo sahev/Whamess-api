@@ -108,7 +108,18 @@ export class QRCodeService {
       }
     
       async qrCodestring(): Promise<string> {
-        let string = await this.driver.findElement(By.className('_1yHR2')).takeScreenshot();
+        let string = ""
+        let self = this;
+
+
+        await this.driver.findElement(By.className('_1yHR2'))
+        .then(async function(webElement) {
+            string = await self.driver.findElement(By.className('_1yHR2')).takeScreenshot();
+        }, function(err) {
+            if (err.state && err.state === 'no such element') {
+            } 
+        });
+
         this.removeSession();
         return string;   
       }
