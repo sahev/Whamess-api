@@ -15,7 +15,7 @@ export class QRCodeService {
         let browserOptions = {
             'debuggerAddress': 'localhost:' + param._v
         };
-        let url = 'http://192.168.99.100:'+ param._n +'/wd/hub'
+        let url = 'http://192.168.99.101:'+ param._n +'/wd/hub'
         //let url = 'http://localhost:4444/wd/hub'
         this.builder = new Builder().forBrowser(this.browserName).usingServer(url);
         this.browserCapabilities = Capabilities.chrome().set(this.capabilityName, browserOptions);
@@ -112,9 +112,9 @@ export class QRCodeService {
         let self = this;
 
 
-        await this.driver.findElement(By.className('_1yHR2'))
+        await this.driver.findElement(By.className('_3jid7'))
         .then(async function(webElement) {
-            string = await self.driver.findElement(By.className('_1yHR2')).takeScreenshot();
+            string = await self.driver.findElement(By.className('_3jid7')).takeScreenshot();
         }, function(err) {
             if (err.state && err.state === 'no such element') {
             } 
